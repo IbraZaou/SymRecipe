@@ -5,7 +5,6 @@ namespace App\Entity;
 use App\Repository\IngredientRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\Constraints\NotBlank;
 
 #[ORM\Entity(repositoryClass: IngredientRepository::class)]
 class Ingredient
