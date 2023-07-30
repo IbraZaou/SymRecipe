@@ -8,7 +8,17 @@
 		{% if ingredients.items is defined %}
 			<h1>Mes ingredients</h1>
 
-			<div class="count d-flex justify-content-center">
+			<a href="{{ path('ingredient.new') }}" class="btn btn-primary">
+				Créer un ingrédient
+			</a>
+
+			{% for message in app.flashes('success') %}
+				<div class="alert alert-success mt-4">
+					{{ message }}
+				</div>
+			{% endfor %}
+
+			<div class="count mt-4">
 				<h4>Il y a
 					{{ ingredients.getTotalItemCount }}
 					ingrédients
@@ -22,6 +32,8 @@
 						<th scope="col">Nom</th>
 						<th scope="col">Prix</th>
 						<th scope="col">Date de création</th>
+						<th scope="col">Edition</th>
+						<th scope="col">Suppression</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -31,17 +43,21 @@
 							<td>{{ingredient.name}}</td>
 							<td>{{ingredient.price}}</td>
 							<td>{{ingredient.createdAt|date("d/m/Y") }}</td>
+							<td>
+								<a href="{{ path ('ingredient.edit', { id: ingredient.id }) }}" class="btn btn-info">Modifier</a>
+							</td>
+							<td>
+								<a href="{{ path ('ingredient.delete', { id: ingredient.id }) }}" class="btn btn-warning">Supprimer</a>
+							</td>
 						</tr>
-					{% endfor %}
+					</td>
 				</tbody>
-			</table>
+			</tr>
+		{% endfor %}
+	</tbody>
+</table>
 
-			<div class="navigation d-flex justify-content-center mt-4">
-				{{ knp_pagination_render(ingredients) }}
-			</div>
-
-		{% else %}
-			<h4>Il n'y a pas d'ingrédients</h4>
-		{% endif %}
-	</div>
-{% endblock %}
+<div class="navigation d-flex justify-content-center mt-4">
+	{{ knp_pagination_render(ingredients) }}
+</div>{% else %}
+<h4>Il n'y a pas d'ingrédients</h4>{% endif %}</div>{% endblock %}

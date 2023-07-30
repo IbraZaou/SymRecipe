@@ -4,9 +4,12 @@ namespace App\Entity;
 
 use App\Repository\IngredientRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: IngredientRepository::class)]
+//dans le champs nom, impossible d'avoir 2 pareilles
+#[UniqueEntity('name')]
 class Ingredient
 {
     #[ORM\Id]
