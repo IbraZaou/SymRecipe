@@ -86,7 +86,7 @@ class RecipeController extends AbstractController
     }
 
 
-      /**
+    /**
      * This controller allow us to edit an ingredient
      *
      * @param RecipeRepository $repository
@@ -98,41 +98,41 @@ class RecipeController extends AbstractController
 
 
 
-     #[Route('/recette/edition/{id}', 'recipe.edit', methods: ['GET', 'POST'])]
-     public function edit(
-         RecipeRepository $recipe, 
-         int $id, 
-         Request $request,
-         EntityManagerInterface $manager) : Response
-     {
- 
-         $recipe = $recipe->findOneBy(['id' => $id]);
-         $form = $this->createForm(RecipeType::class, $recipe);
- 
-         $form->handleRequest($request);
- 
-         if ($form->isSubmitted() && $form->isValid()) {
-             $recipe = $form->getData();
-             
-             $manager->persist($recipe);
-             $manager->flush();
- 
-             $this->addFlash(
-                 'success',
-                 'Votre recette a bien été modifié !'
-             );
- 
-             return $this->redirectToRoute('recipe.index');
-         }
- 
-         return $this->render('pages/recipe/edit.html.twig', [
-             'form' => $form->createView()
-         ]);
-     }
+    #[Route('/recette/edition/{id}', 'recipe.edit', methods: ['GET', 'POST'])]
+    public function edit(
+        RecipeRepository $recipe, 
+        int $id, 
+        Request $request,
+        EntityManagerInterface $manager) : Response
+    {
+
+        $recipe = $recipe->findOneBy(['id' => $id]);
+        $form = $this->createForm(RecipeType::class, $recipe);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $recipe = $form->getData();
+            
+            $manager->persist($recipe);
+            $manager->flush();
+
+            $this->addFlash(
+                'success',
+                'Votre recette a bien été modifié !'
+            );
+
+            return $this->redirectToRoute('recipe.index');
+        }
+
+        return $this->render('pages/recipe/edit.html.twig', [
+            'form' => $form->createView()
+        ]);
+    }
 
 
 
-     /**
+    /**
      * This controller allows us to delete a recipe
      *
      * @param EntityManagerInterface $manager
