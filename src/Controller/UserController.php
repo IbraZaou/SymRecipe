@@ -3,12 +3,14 @@
 namespace App\Controller;
 
 use App\Form\UserType;
+use App\Form\UserPasswordType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserController extends AbstractController
 {
@@ -21,6 +23,7 @@ class UserController extends AbstractController
      * @param int $id
      * @param Request $request
      * @param EntityManagerInterface $manager
+     * @param UserPasswordHasherInterface $hasher
      * @return Response
      */
 
@@ -29,7 +32,9 @@ class UserController extends AbstractController
     public function edit(UserRepository $user,
     int $id,
     Request $request,
-    EntityManagerInterface $manager): Response
+    EntityManagerInterface $manager,
+    UserPasswordHasherInterface $hasher): Response
+    
     {
 
         $user = $user->findOneBy(['id' => $id]);
@@ -46,20 +51,85 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $user = $form->getData();
+            if($hasher->isPasswordValid($user, $form->getData()->getPlainPassword())) {
 
-            $manager->persist($user);
-            $manager->flush();
-
-            $this->addFlash(
-                'success',
-                'Votre compte a bien été modifié !'
-            );
-
-            return $this->redirectToRoute('recipe.index');
+                $user = $form->getData();
+                $manager->persist($user);
+                $manager->flush();
+    
+                $this->addFlash(
+                    'success',
+                    'Votre compte a bien été modifié !'
+                );
+    
+                return $this->redirectToRoute('recipe.index');
+            } else {
+                $this->addFlash(
+                    'warning',
+                    'Le mot de passe renseigné est incorrecte !'
+                );
+            }
         }
 
         return $this->render('pages/user/edit.html.twig', [
+            'form' => $form->createView()
+        ]);
+    }
+
+
+    /**
+     * 
+     * This method allows us to edit the password
+     * 
+     * @param UserRepository $user
+     * @param int $ind
+     * @param Request $request
+     * @param UserPasswordHasherInterface $hasher
+     * @param EntityManagerInterface $manager
+     * @return Response
+     * 
+     */
+
+
+    #[Route('/utilisateur/edition-mot-de-passe/{id}', 'user.edit.password', methods: ['GET', 'POST'])]
+    public function editPassword(
+        UserRepository $user,
+        int $id, 
+        Request $request,
+        UserPasswordHasherInterface $hasher,
+        EntityManagerInterface $manager) : Response 
+    {
+        $user = $user->findOneBy(['id' => $id]);
+        $form = $this->createForm(UserPasswordType::class);
+
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()) {
+            if($hasher->isPasswordValid($user, $form->getData()['plainPassword'])) {
+                $user->setPassword(
+                    $hasher->hashPassword(
+                        $user,
+                        $form->getData()['newPassword']
+                    )
+                );
+
+                $manager->persist($user);
+                $manager->flush();
+                
+                $this->addFlash(
+                    'success',
+                    'Le mot de passe a été modifié !'
+                );
+
+                return $this->redirectToRoute('recipe.index');
+            } else {
+                $this->addFlash(
+                    'warning',
+                    'Le mot de passe renseigné est incorrecte !'
+                );
+            }
+        }
+        
+        return $this->render('pages/user/edit_password.html.twig', [
             'form' => $form->createView()
         ]);
     }
