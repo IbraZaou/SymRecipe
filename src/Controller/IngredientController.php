@@ -10,7 +10,10 @@ use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 class IngredientController extends AbstractController
 {
@@ -26,11 +29,12 @@ class IngredientController extends AbstractController
 
 
     #[Route('/ingredient', name: 'ingredient.index', methods: ['GET'])]
+    #[IsGranted('ROLE_USER')]
     public function index(IngredientRepository $repository, PaginatorInterface $paginator, Request $request): Response
     {
 
         $ingredients = $paginator->paginate(
-            $repository->findAll(),
+            $repository->findBy(['user' => $this->getUser()]),
             $request->query->getInt('page', 1),
             10
         );
@@ -53,6 +57,7 @@ class IngredientController extends AbstractController
 
 
     #[Route('/ingredient/nouveau', 'ingredient.new', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_USER')]
     public function new(
         
         Request $request,
@@ -66,6 +71,7 @@ class IngredientController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $ingredient = $form->getData();
+            $ingredient->setUser($this->getUser());
             
             $manager->persist($ingredient);
             $manager->flush();
@@ -94,19 +100,31 @@ class IngredientController extends AbstractController
      */
 
 
-
-
     #[Route('/ingredient/edition/{id}', 'ingredient.edit', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_USER')]
     public function edit(
         IngredientRepository $repository, 
         int $id, 
         Request $request,
-        EntityManagerInterface $manager) : Response
+        EntityManagerInterface $manager,
+        // a la place de @Security qui ne fonctionne plus, CurrentUser fait la faire ligne 117 à 119
+        #[CurrentUser] UserInterface $currentUser) : Response
     {
 
         $ingredient = $repository->findOneBy(['id' => $id]);
-        $form = $this->createForm(IngredientType::class, $ingredient);
 
+        // Check if the current user owns the ingredient
+        if($currentUser !== $ingredient->getUser()) {
+            $this->addFlash(
+                'warning',
+                'Vous pouvez seulement modifier des ingrédients vous appartenant.'
+            );
+
+            return $this->redirectToRoute('ingredient.index');
+        }
+
+    
+        $form = $this->createForm(IngredientType::class, $ingredient);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

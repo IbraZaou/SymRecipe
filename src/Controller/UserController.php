@@ -11,6 +11,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class UserController extends AbstractController
 {
@@ -27,17 +30,27 @@ class UserController extends AbstractController
      * @return Response
      */
 
-
     #[Route('/utilisateur/edition/{id}', name: 'user.edit', methods: ['GET', 'POST'])]
     public function edit(UserRepository $user,
     int $id,
     Request $request,
     EntityManagerInterface $manager,
-    UserPasswordHasherInterface $hasher): Response
+    UserPasswordHasherInterface $hasher,
+    #[CurrentUser] UserInterface $currentUser): Response
     
     {
 
         $user = $user->findOneBy(['id' => $id]);
+
+        if($currentUser !== $user->getUser()) {
+            $this->addFlash(
+                'warning',
+                'Vous pouvez seulement modifier votre compte.'
+            );
+
+            return $this->redirectToRoute('recipe.index');
+        }
+
         $form = $this->createForm(UserType::class, $user);
         
         if (!$this->getUser()) {
@@ -97,9 +110,18 @@ class UserController extends AbstractController
         int $id, 
         Request $request,
         UserPasswordHasherInterface $hasher,
-        EntityManagerInterface $manager) : Response 
+        EntityManagerInterface $manager,
+        #[CurrentUser] UserInterface $currentUser) : Response 
     {
         $user = $user->findOneBy(['id' => $id]);
+
+        if($currentUser !== $user->getUser()) {
+            $this->addFlash(
+                'warning',
+                'Vous pouvez seulement modifier le mot de passe de votre compte.'
+            );
+        }
+
         $form = $this->createForm(UserPasswordType::class);
 
         $form->handleRequest($request);

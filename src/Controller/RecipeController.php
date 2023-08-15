@@ -11,10 +11,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+
 
 class RecipeController extends AbstractController
 {
-
 
     /**
      * 
@@ -28,8 +31,8 @@ class RecipeController extends AbstractController
      * 
      */
 
-
     #[Route('/recette', name: 'recipe.index', methods: ['GET'])]
+    #[IsGranted('ROLE_USER')]
     public function index(
         RecipeRepository $repository, 
         PaginatorInterface $paginator, 
@@ -37,9 +40,9 @@ class RecipeController extends AbstractController
     ): Response {
 
         $recipes = $paginator->paginate(
-            $repository->findAll(),
-            $request->query->getInt('page', 1),
-            10
+                    $repository->findBy(['user' => $this->getUser()]),
+                    $request->query->getInt('page', 1),
+                    10
         );
 
         return $this->render('pages/recipe/index.html.twig', [
@@ -59,9 +62,10 @@ class RecipeController extends AbstractController
 
 
     #[ROUTE('/recette/creation', 'recipe.new', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_USER')]
     public function new(
         Request $request,
-        EntityManagerInterface $manager
+        EntityManagerInterface $manager,
     ) : Response {
 
             $recipe = new Recipe();
@@ -70,6 +74,7 @@ class RecipeController extends AbstractController
             $form->handleRequest($request);
             if($form->isSubmitted() && $form->isValid()) {
                 $recipe = $form->getData();
+                $recipe->setUser($this->getUser());
 
                 $manager->persist($recipe);
                 $manager->flush();
@@ -99,14 +104,26 @@ class RecipeController extends AbstractController
 
 
     #[Route('/recette/edition/{id}', 'recipe.edit', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_USER')]
     public function edit(
         RecipeRepository $recipe, 
         int $id, 
         Request $request,
-        EntityManagerInterface $manager) : Response
+        EntityManagerInterface $manager,
+        #[CurrentUser] UserInterface $currentUser) : Response
     {
 
         $recipe = $recipe->findOneBy(['id' => $id]);
+
+        if($currentUser !== $recipe->getUser()) {
+            $this->addFlash(
+                'warning',
+                'Vous pouvez seulement modifier des recettes vous appartenant.'
+            );
+
+            return $this->redirectToRoute('recipe.index');
+        }
+
         $form = $this->createForm(RecipeType::class, $recipe);
 
         $form->handleRequest($request);
