@@ -2,18 +2,23 @@
 
 namespace App\Controller;
 
+use App\Entity\Mark;
 use App\Entity\Recipe;
+use App\Form\MarkType;
 use App\Form\RecipeType;
+use App\Repository\MarkRepository;
 use App\Repository\RecipeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 
 class RecipeController extends AbstractController
@@ -49,6 +54,92 @@ class RecipeController extends AbstractController
             'recipes' => $recipes
         ]);
     }
+
+
+    #[Route('/recette/publique', 'recipe.index.public', methods: ['GET'])]
+    #[IsGranted('ROLE_USER')]
+    public function indexPublic(
+        PaginatorInterface $paginator,
+        RecipeRepository $repository,
+        Request $request
+    ): Response{
+
+        $recipes = $paginator->paginate(
+            $repository->findPublicRecipe(null),
+            $request->query->getInt('page', 1),
+            10
+        );
+
+        return $this->render('pages/recipe/index_public.html.twig', [
+            'recipes' => $recipes
+        ]);
+    }
+
+
+    /**
+     * This controller allows us to see a recipe if this one is public
+     * 
+     * @param Recipe $recipe
+     * @param AuthorizationCheckerInterface $authorizationChecker
+     *  @return Response
+     */
+
+    
+    #[Route('/recette/{id}', 'recipe.show', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_USER')]
+    public function show(
+    Recipe $recipe,
+    AuthorizationCheckerInterface $authorizationChecker,
+    Request $request,
+    MarkRepository $markRepository,
+    EntityManagerInterface $manager) : Response
+    {
+        $mark = new Mark();
+        $form = $this->createForm(MarkType::class, $mark);
+
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()) {
+            $mark->setUser($this->getUser())
+                ->setRecipe($recipe);
+
+            //ne pas noté 2 fois la meme recette
+            $existingMark = $markRepository->findOneBy([
+                'user' => $this->getUser(),
+                'recipe' => $recipe
+            ]);
+
+            if(!$existingMark) {
+                $manager->persist($mark);
+            }else{
+                $existingMark->setMark(
+                    $form->getData()->getMark()
+                );
+            }
+
+            // Enregistrement des modifications dans la base de données
+            $manager->flush();
+
+            $this->addFlash(
+                'success',
+                'Votre note a bien été prise en compte.'
+            );
+
+            return $this->redirectToRoute('recipe.show', ['id' => $recipe->getId()]);
+        }
+
+        //Cela va permettre au User de ne pas pouvoir acceder au recette non public "isPublic = 0"
+        if (!$authorizationChecker->isGranted('ROLE_USER') || !$recipe->isIsPublic()) {
+            throw new AccessDeniedException('Access denied');
+        }
+
+        return $this->render('pages/recipe/show.html.twig', [
+            'recipe' => $recipe,
+            'form' => $form->createView()
+        ]);
+
+        
+    }
+
 
 
 /**

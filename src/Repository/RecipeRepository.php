@@ -21,28 +21,25 @@ class RecipeRepository extends ServiceEntityRepository
         parent::__construct($registry, Recipe::class);
     }
 
-//    /**
-//     * @return Recipe[] Returns an array of Recipe objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('r')
-//            ->andWhere('r.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('r.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    /**
+     * This method allow us to find public recipes based on number recipes
+     * 
+     * @param integer $nbRecipes
+     * @return array
+     */
 
-//    public function findOneBySomeField($value): ?Recipe
-//    {
-//        return $this->createQueryBuilder('r')
-//            ->andWhere('r.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    public function findPublicRecipe(?int $nbRecipes): array
+    {
+        $queryBuilder = $this->createQueryBuilder('r')
+        ->where('r.isPublic = 1')
+        ->orderBy('r.createdAt', 'DESC');
+    
+        if(!$nbRecipes !== 0 || !$nbRecipes !== null) {
+            $queryBuilder->setMaxResults($nbRecipes);
+        }
+
+        return $queryBuilder->getQuery()
+        ->getResult();
+    }
+
 }
