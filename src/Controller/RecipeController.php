@@ -21,6 +21,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 
+
 class RecipeController extends AbstractController
 {
 
@@ -128,7 +129,7 @@ class RecipeController extends AbstractController
         }
 
         //Cela va permettre au User de ne pas pouvoir acceder au recette non public "isPublic = 0"
-        if (!$authorizationChecker->isGranted('ROLE_USER') || !$recipe->isIsPublic()) {
+        if (!$authorizationChecker->isGranted('ROLE_USER') || (!$recipe->isIsPublic() && $this->getUser() !== $recipe->getUser())) {
             throw new AccessDeniedException('Access denied');
         }
 
@@ -152,7 +153,7 @@ class RecipeController extends AbstractController
  */
 
 
-    #[ROUTE('/recette/creation', 'recipe.new', methods: ['GET', 'POST'])]
+    #[ROUTE('/recette/creation', 'recipe.new', methods: ['GET', 'POST'],  priority: 1)]
     #[IsGranted('ROLE_USER')]
     public function new(
         Request $request,
@@ -232,6 +233,7 @@ class RecipeController extends AbstractController
 
             return $this->redirectToRoute('recipe.index');
         }
+        
 
         return $this->render('pages/recipe/edit.html.twig', [
             'form' => $form->createView()

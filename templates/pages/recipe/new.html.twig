@@ -62,6 +62,8 @@
 			</div>
 		</div>
 
+		{{ form_row(form.imageFile)}}
+
 		<div class="form-group">
 			{{ form_label(form.isFavorite )}}
 			{{ form_widget(form.isFavorite )}}
@@ -71,6 +73,8 @@
 		</div>
 
 		{{form_row(form.ingredients)}}
+
+		{{ form_label(form.ingredients) }}
 
 
 		{{ form_end(form) }}
