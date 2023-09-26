@@ -1,0 +1,19 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+	SymRecipe - Erreur
+{% endblock %}
+
+{% block body %}
+
+	<div class="d-flex flex-column justify-content-center align-items-center" style="height: 90vh">
+		<h1 class="">HTTP Error
+			{{ exception.statusCode }}</h1>
+		<p class="">
+			{{ exception.statusText }}
+		</p>
+		<a href={{ path('home.index')}}>Retourner à l'accueil</a>
+	</div>
+
+
+{% endblock %}
