@@ -1,0 +1,21 @@
+footer {
+    background-color: rgba(21, 21, 21, 0.152);
+    height: 20vh;
+    @include FlexCenter;
+
+    .footer_container {
+
+        border: white;
+        @include FlexCenter;
+        flex-direction: column;
+
+        p,
+        a {
+            color: white;
+            text-align: center;
+            text-decoration: none;
+        }
+
+    }
+
+}

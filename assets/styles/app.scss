@@ -1,0 +1,32 @@
+//variables
+@import '../styles/variable';
+
+//pages
+@import '../pages/contact';
+@import '../pages/ingredient';
+@import '../pages/recipe';
+@import '../pages/home';
+
+
+//partials
+@import '../pages/partials/footer';
+@import '../pages/partials/header';
+@import '../pages/partials/card';
+
+@import '/node_modules/animate.css/animate.css';
+
+
+body {
+    background: rgb(0, 162, 52);
+    background: linear-gradient(135deg, rgba(0, 162, 52, 1) 0%, rgba(0, 206, 215, 1) 100%);
+
+    .btn {
+        transition: .3s;
+        border-radius: 10px;
+    }
+
+    .btn:hover {
+        border-radius: 50px;
+        transition: .3s;
+    }
+}
