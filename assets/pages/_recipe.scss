@@ -15,7 +15,6 @@
 // Form Add new recette
 
 #form_container_recipe {
-    height: 150vh;
     @include FlexCenter;
     flex-direction: column;
 
@@ -86,6 +85,7 @@
             margin: 4px auto;
             @include FlexCenter;
         }
+
 
         #recipe_ingredients {
             background-color: white;
