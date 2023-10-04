@@ -1,0 +1,27 @@
+#test_form {
+    padding: 7.5rem 5rem;
+
+    h1 {
+        text-align: center;
+        color: white;
+    }
+
+    input {
+        border-radius: 20px;
+        width: 40%;
+        margin: 2rem auto;
+        padding: .7rem;
+        transition: .1s;
+    }
+
+    input:hover {
+        border-radius: 100px;
+        border: orangered solid;
+    }
+
+    .btn {
+        margin: 4px auto;
+        @include FlexCenter;
+    }
+
+}

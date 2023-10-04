@@ -4,14 +4,14 @@
 {% endblock %}
 
 {% block body %}
-	<div class="container mt-4">
+	<div id="container_commu" class="container mt-4">
 		{% if recipes.items is defined %}
 			<h1>Recettes de la communauté</h1>
 
-			<div class="d-flex justify-content-center flex-wrap">
+			<div id="card_container_commu" class="d-flex flex-wrap">
 				{% for recipe in recipes %}
 
-					<div class="card text-white bg-primary mb-3" style="max-width: 20rem;">
+					<div id="card" class="card text-white bg-primary mb-3" style="max-width: 20rem;">
 						<div class="card-header">Recette n°{{ recipe.id }}</div>
 						<div class="card-body">
 							<h4 class="card-title">{{ recipe.name }}</h4>
@@ -24,5 +24,13 @@
 		{% else %}
 			<h4>Il n'y a pas de recettes</h4>
 		{% endif %}
+
+
+		<a href="{{ path('recipe.new') }}">
+			<button type="submit" class="btn btn-primary mt-4">
+				Ajouter une recette
+			</button>
+		</a>
+
 	</div>
 {% endblock %}

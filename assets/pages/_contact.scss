@@ -1,0 +1,30 @@
+// Form Add new ingredient
+
+#container_contact {
+    height: 100vh;
+    @include FlexCenter;
+    flex-direction: column;
+
+    form {
+
+        width: 60%;
+
+        input {
+            border-radius: 20px;
+            padding: .7rem;
+            transition: .1s;
+            margin: 3rem 0;
+        }
+
+        input:hover {
+            border-radius: 100px;
+            border: orangered solid;
+        }
+
+        .btn {
+            margin: 4px auto;
+            @include FlexCenter;
+        }
+
+    }
+}

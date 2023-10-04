@@ -19,18 +19,20 @@ class UserPasswordType extends AbstractType
             'type' => PasswordType::class,
             'first_options' => [
                 'attr' => [
-                    'class' => 'form-control'
+                    'class' => 'form-control',
+                    'placeholder' => 'Mot de passe actuel'
                 ],
-                'label' => 'Mot de passe',
+                'label' => false,
                 'label_attr' => [
                     'class' => 'form-label mt-4'
                 ]
             ],
             'second_options' => [      
                 'attr' => [
-                    'class' => 'form-control'
+                    'class' => 'form-control',
+                    'placeholder' => 'Confirmation du mot de passe'
                 ],
-                'label' => 'Confirmation du mot de passe',
+                'label' => false,
                 'label_attr' => [
                     'class' => 'form-label mt-4'
                 ]
@@ -38,8 +40,11 @@ class UserPasswordType extends AbstractType
             'invalid_message' => 'Les mots de passe ne correspondent pas.'
         ])
         ->add('newPassword', PasswordType::class, [
-            'attr' => ['class' => 'form-control'],
-            'label' => 'Nouveau mot de passe',
+            'attr' => [
+                'class' => 'form-control',
+            'placeholder' => 'Nouveau mot de passe super secret'
+            ],
+            'label' => false,
             'label_attr' => ['class' => 'form-label mt-4'],
             'constraints' => [new Assert\NotBlank()]
         ])

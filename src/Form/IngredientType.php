@@ -20,9 +20,10 @@ class IngredientType extends AbstractType
             'attr' => [
                 'class' => 'form-control',
                 'minlength' => '2',
-                'maxlength' => '50'
+                'maxlength' => '50',
+                'placeholder' => 'Nom',
             ],
-            'label' => "Nom",
+            'label' => false,
             'label_attr' => [
                 'class' => 'form-label mt-4'
             ],
@@ -34,8 +35,10 @@ class IngredientType extends AbstractType
             ->add('price', MoneyType::class, [
                 'attr' => [
                     'class' => 'form-control',
+                    'placeholder' => 'Prix',
+
                 ],
-                'label' => "Prix",
+                'label' => false,
                 'label_attr' => [
                     'class' => 'form-label mt-4'
                 ],

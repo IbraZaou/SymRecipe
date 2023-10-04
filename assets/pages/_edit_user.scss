@@ -1,31 +1,20 @@
-#ingredient_container {
-
+#edit_user_container {
     height: 100vh;
-    @include FlexCenter;
-
-    .tableau_ingredient {
-
-        padding: 2rem;
-        background-color: #fff;
-        border-radius: 20px;
-    }
-
-}
-
-
-// Form Add new ingredient
-
-#form_container_ingredient {
-    height: 70vh;
     @include FlexCenter;
     flex-direction: column;
 
+    h1 {
+        margin: 4rem 0;
+    }
+
     form {
+        width: 50%;
 
         input {
             border-radius: 20px;
             padding: .7rem;
             transition: .1s;
+            margin: 1rem 0;
         }
 
         input:hover {

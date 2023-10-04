@@ -1,0 +1,130 @@
+#recipe_container {
+
+    height: 100vh;
+    @include FlexCenter;
+
+    .tableau_recipe {
+        padding: 2rem;
+        background-color: #fff;
+        border-radius: 20px;
+    }
+
+}
+
+
+// Form Add new recette
+
+#form_container_recipe {
+    height: 150vh;
+    @include FlexCenter;
+    flex-direction: column;
+
+    form {
+
+        input {
+            border-radius: 20px;
+            padding: .7rem;
+            transition: .1s;
+            margin: 1rem 0;
+        }
+
+        input[type=file] {
+            background-color: white;
+            width: 100%;
+            padding: 3rem;
+        }
+
+        input[type=file]:hover {
+            border-radius: 20px;
+            border: none;
+        }
+
+        input::file-selector-button {
+            border-radius: 10px;
+            background-color: orangered;
+            color: white;
+            border: none;
+            padding: .5rem;
+            margin-right: 4rem;
+        }
+
+        input:hover {
+            border-radius: 20px;
+        }
+
+        input::file-selector-button:hover {
+            border-radius: 100px;
+            border: orangered solid;
+            cursor: pointer;
+            transition: .1s;
+
+        }
+
+        #container_diff {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 20px;
+            margin: 2rem 0;
+        }
+
+        #container_favorite {
+            @include FlexCenter;
+            justify-content: space-around;
+            width: 35%;
+            border: solid;
+            background: #fff;
+            border-radius: 20px;
+            border: none;
+
+            input {
+                cursor: pointer;
+                border: solid 1px;
+            }
+        }
+
+        .btn {
+            margin: 4px auto;
+            @include FlexCenter;
+        }
+
+        #recipe_ingredients {
+            background-color: white;
+            border-radius: 20px;
+            padding: 2rem;
+            @include FlexCenter;
+            flex-wrap: wrap;
+
+            input {
+                margin-left: 5%;
+            }
+
+            label {
+                margin-left: 1%;
+                cursor: pointer;
+
+            }
+        }
+    }
+}
+
+// publique recipe
+#container_commu {
+    height: 140vh;
+    @include FlexCenter;
+    flex-direction: column;
+
+    h1 {
+        margin-bottom: 4rem;
+    }
+
+    #card_container_commu {
+        background-color: #fff;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        padding: 2rem;
+        border-radius: 20px;
+        box-shadow: 5px 10px 5px grey;
+    }
+
+}

@@ -21,8 +21,9 @@ class UserType extends AbstractType
                 'class' => 'form-control',
                 'minlength' => '2',
                 'maxlength' => '50',
+                'placeholde' => 'Nom / Prénom'
             ],
-            'label' => 'Nom / Prénom',
+            'label' => false,
             'label_attr' => [
                 'class' => 'form-label mt-4'
             ],
@@ -36,9 +37,10 @@ class UserType extends AbstractType
                 'class' => 'form-control',
                 'minlength' => '2',
                 'maxlength' => '50',
+                'placeholder' => 'Pseudo (facultatif)'
             ],
             'required' => false,
-            'label' => 'Pseudo (facultatif)',
+            'label' => false,
             'label_attr' => [
                 'class' => 'form-label mt-4'
             ],
@@ -49,7 +51,8 @@ class UserType extends AbstractType
         ->add('submit', SubmitType::class, [
             'attr' => [
                 'class' => 'btn btn-primary mt-4'
-            ]
+            ],
+            'label' => 'Modifier'
         ]);
         
     }
