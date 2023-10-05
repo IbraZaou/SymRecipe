@@ -1,7 +1,7 @@
 # SymRecipe
 
 SymRecipe est une application créer avec Symfony et WebPack, l'application permet de créer des recettes à base d'ingrédients que vous aurez vous-mêmes créer.
-Vous pourrez partager les recettes à la communauté du site ou bine les garder en privées.
+Vous pourrez partager les recettes à la communauté du site ou bien les garder en privées.
 
 Quelques screenshot de l'application web 
 
