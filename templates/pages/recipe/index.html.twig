@@ -73,6 +73,11 @@
 			</tbody>
 		</table>
 	</div>
+	<a href="{{ path('recipe.index.public') }}">
+		<button type="submit" class="btn btn-primary mt-4">
+			Voir les recettes de la communauté
+		</button>
+	</a>
 
 	<div class="navigation d-flex justify-content-center mt-4">
 		{{ knp_pagination_render(recipes) }}

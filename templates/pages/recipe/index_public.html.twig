@@ -25,6 +25,10 @@
 			<h4>Il n'y a pas de recettes</h4>
 		{% endif %}
 
+		<div class="navigation d-flex justify-content-center mt-4">
+			{{ knp_pagination_render(recipes) }}
+		</div>
+
 
 		<a href="{{ path('recipe.new') }}">
 			<button type="submit" class="btn btn-primary mt-4">

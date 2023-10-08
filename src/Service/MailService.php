@@ -24,7 +24,7 @@ class MailService
         string $subject,
         string $htmlTemplate,
         array $context,
-        string $to = "admin@symrecipe.com"
+        string $to = "ibrazaou69@gmail.com "
     ): void
     {
 
