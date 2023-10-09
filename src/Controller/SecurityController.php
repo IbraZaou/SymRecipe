@@ -35,24 +35,6 @@ class SecurityController extends AbstractController
     }
 
 
-
-    /**
-     * 
-     * This controller allow us to logout
-     * 
-     * @return void
-     * 
-     */
-
-
-    #[Route('/deconnexion', 'security.logout')]
-    public function logout()
-    {
-        // nothing to do here...
-    }
-
-
-
     /**
      * This controller allow us to register
      * 
@@ -90,5 +72,22 @@ class SecurityController extends AbstractController
         return $this->render('pages/security/registration.html.twig', [
             'form' => $form->createView()
         ]);
+    }
+
+
+
+        /**
+     * 
+     * This controller allow us to logout
+     * 
+     * @return void
+     * 
+     */
+
+
+    #[Route('/deconnexion', 'security.logout')]
+    public function logout()
+    {
+         // nothing to do here...
     }
 }

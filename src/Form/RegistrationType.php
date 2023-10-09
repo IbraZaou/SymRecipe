@@ -13,6 +13,9 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\Regex;
+
 use Symfony\Component\Validator\Constraints as Assert;
 
 
@@ -78,9 +81,17 @@ class RegistrationType extends AbstractType
                         'placeholder' => 'Mot de passe',
                     ],
                     'label' => false,
-                    'label_attr' => [
-                        'class' => 'form-label mt-4'
-                    ]
+                    'constraints' => [
+                        new Length([
+                            'min' => 6,
+                            'minMessage' => 'Le mot de passe doit avoir au moins {{ limit }} caractères.',
+                            // longueur maximale peut également être spécifiée ici
+                        ]),
+                        new Regex([
+                            'pattern' => '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/',
+                            'message' => 'Le mot de passe doit contenir au moins une majuscule, un chiffre et un caractère spécial (@, $, !, %, *, ?, &,).',
+                        ]),
+                    ],
                 ],
                 'second_options' => [      
                     'attr' => [
@@ -88,9 +99,17 @@ class RegistrationType extends AbstractType
                     'placeholder' => 'Confirmation du mot de passe'
                     ],
                     'label' => false,
-                    'label_attr' => [
-                        'class' => 'form-label mt-4'
-                    ]
+                    'constraints' => [
+                        new Length([
+                            'min' => 6,
+                            'minMessage' => 'Le mot de passe doit avoir au moins {{ limit }} caractères.',
+                            // longueur maximale peut également être spécifiée ici
+                        ]),
+                        new Regex([
+                            'pattern' => '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/',
+                            'message' => 'Le mot de passe doit contenir au moins une majuscule, un chiffre et un caractère spécial (@, $, !, %, *, ?, &,).',
+                        ]),
+                    ],
                 ],
                 'invalid_message' => 'Les mots de passe ne correspondent pas.'
             ])

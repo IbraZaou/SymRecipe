@@ -10,6 +10,9 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\Regex;
+
 class UserPasswordType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -23,9 +26,6 @@ class UserPasswordType extends AbstractType
                     'placeholder' => 'Mot de passe actuel'
                 ],
                 'label' => false,
-                'label_attr' => [
-                    'class' => 'form-label mt-4'
-                ]
             ],
             'second_options' => [      
                 'attr' => [
@@ -33,9 +33,6 @@ class UserPasswordType extends AbstractType
                     'placeholder' => 'Confirmation du mot de passe'
                 ],
                 'label' => false,
-                'label_attr' => [
-                    'class' => 'form-label mt-4'
-                ]
             ],
             'invalid_message' => 'Les mots de passe ne correspondent pas.'
         ])
@@ -46,7 +43,17 @@ class UserPasswordType extends AbstractType
             ],
             'label' => false,
             'label_attr' => ['class' => 'form-label mt-4'],
-            'constraints' => [new Assert\NotBlank()]
+            'constraints' => [
+                new Assert\NotBlank(),
+                new Length([
+                    'min' => 6,
+                    'minMessage' => 'Le mot de passe doit avoir au moins {{ limit }} caractères.',
+                    // longueur maximale peut également être spécifiée ici
+                ]),
+                new Regex([
+                    'pattern' => '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/',
+                    'message' => 'Le mot de passe doit contenir au moins une majuscule, un chiffre et un caractère spécial (@, $, !, %, *, ?, &,).',
+                ]),]
         ])
             ->add('submit', SubmitType::class, [
                 'attr' => [

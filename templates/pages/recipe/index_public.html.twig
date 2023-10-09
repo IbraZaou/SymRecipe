@@ -11,13 +11,17 @@
 			<div id="card_container_commu" class="d-flex flex-wrap">
 				{% for recipe in recipes %}
 
-					<div id="card" class="card text-white bg-primary mb-3" style="max-width: 20rem;">
-						<div class="card-header">Recette n°{{ recipe.id }}</div>
-						<div class="card-body">
-							<h4 class="card-title">{{ recipe.name }}</h4>
-							<p class="card-text">{{ recipe.description|slice(0, 100) ~ '...' }}</p>
+					{# pour prendre chaque id différent on ajout {'id': recipe.id} après la route nécessaire #}
+					<a href="{{ path('recipe.show', {'id': recipe.id}) }}">
+
+						<div id="card" class="card text-white bg-primary mb-3" style="max-width: 20rem;">
+							<div class="card-header">Recette n°{{ recipe.id }}</div>
+							<div class="card-body">
+								<h4 class="card-title">{{ recipe.name }}</h4>
+								<p class="card-text">{{ recipe.description|slice(0, 100) ~ '...' }}</p>
+							</div>
 						</div>
-					</div>
+					</a>
 				{% endfor %}
 			</div>
 

@@ -26,7 +26,7 @@ class AppFixtures extends Fixture
     {
 
 
-        //Users
+        //Admin et Users
         $users = [];
 
         $admin = new User();
