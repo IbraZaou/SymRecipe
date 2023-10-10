@@ -4,18 +4,19 @@ namespace App\Controller;
 
 use App\Entity\Mark;
 use App\Entity\Recipe;
+use App\Entity\Category;
 use App\Form\MarkType;
 use App\Form\RecipeType;
-use App\Entity\Category;
-use App\Repository\CategoryRepository;
 use App\Repository\MarkRepository;
 use App\Repository\RecipeRepository;
+use App\Repository\CategoryRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -169,7 +170,7 @@ class RecipeController extends AbstractController
     public function new(
         Request $request,
         EntityManagerInterface $manager,
-        CategoryRepository $categorieRepository
+        CategoryRepository $categoryRepository
     ) : Response {
 
             $recipe = new Recipe();
@@ -179,12 +180,6 @@ class RecipeController extends AbstractController
             if($form->isSubmitted() && $form->isValid()) {
                 $recipe = $form->getData();
                 $recipe->setUser($this->getUser());
-
-                // Récupérez les catégories depuis la base de données
-            $categories = $categorieRepository->findAll();
-                $categorie = $form->get('categorie')->getData();
-        $recipe->setCategorie($categorie);
-
 
                 $manager->persist($recipe);
                 $manager->flush();
@@ -197,7 +192,9 @@ class RecipeController extends AbstractController
                 return $this->redirectToRoute('recipe.index');
             }
 
-            return $this->render('pages/recipe/new.html.twig', ['form' => $form->createView()]);
+            return $this->render('pages/recipe/new.html.twig', [
+                'form' => $form->createView()
+            ]);
     }
 
 

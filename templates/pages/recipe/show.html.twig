@@ -73,6 +73,10 @@
 			<span class="badge bg-primary">{{ingredient.name}}</span>
 		{% endfor %}
 
+		<h2 class="mt-4">Catégorie</h2>
+		{% for category in recipe.category %}
+			<span class="badge bg-primary">{{category.name}}</span>
+		{% endfor %}
 
 		<div class="mark">
 			{{form(form)}}

@@ -86,10 +86,9 @@ class Recipe
     #[ORM\OneToMany(mappedBy: 'recipe', targetEntity: Mark::class, orphanRemoval: true)]
     private Collection $marks;
 
-    #[ORM\ManyToOne(targetEntity: Category::class)]
+    #[ORM\ManyToMany(targetEntity: Category::class)]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Category $category = null;
-
+    private $category;
 
     private ?float $average = null;
 
@@ -361,14 +360,14 @@ class Recipe
         return $this->average;
     }
 
-    // ... (constructeur, méthodes getters et setters pour les autres propriétés)
 
+     // Getter and setter methods for category
     public function getCategory(): ?Category
     {
         return $this->category;
     }
 
-    public function setCategor(?Category $category): static
+    public function setCategory(?Category $category): self
     {
         $this->category = $category;
 

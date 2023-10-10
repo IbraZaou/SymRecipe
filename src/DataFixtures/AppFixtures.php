@@ -5,10 +5,10 @@ namespace App\DataFixtures;
 use Faker\Factory;
 use App\Entity\Mark;
 use App\Entity\User;
-use App\Entity\Category;
 use Faker\Generator;
 use App\Entity\Recipe;
 use App\Entity\Contact;
+use App\Entity\Category;
 use App\Entity\Ingredient;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -103,22 +103,6 @@ class AppFixtures extends Fixture
             }
         }
 
-    
-        $categories = [
-            'Cuisine Végétarienne/Végétalienne',
-            'Recettes Santé',
-            // ... ajoutez d'autres catégories ici
-        ];
-
-        foreach ($categories as $categoryName) {
-            $categorie = new Category();
-            $categorie->setName($categoryName);
-            $manager->persist($categorie);
-            $this->addReference($categoryName, $categorie);
-        }
-
-        $manager->flush();
-
 
         // Contact 
 
@@ -134,6 +118,35 @@ class AppFixtures extends Fixture
     
         $manager->flush(); 
 
+
+        // catégories
+        $categories = [
+            "Santé",
+            "Desserts",
+            "Rapides et Faciles",
+            "Traditionnelles",
+            "Pour Enfants",
+            "Fête",
+            "Cocktails et Boissons", 
+            "Produits de Saison",
+            "Petits Déjeuners et Brunchs",
+            "Plats Uniques",
+            "Confitures et Conserves",
+            "Grillades et Barbecue",
+            "Pâtes et Risottos",
+            "Soupes et Potages",
+            "Poissons et Fruits de Mer",
+            "Snacks et Apéritifs",
+            "Pain et Pâtisseries",
+        ];
+
+        foreach ($categories as $categoryName) {
+            $category = new Category();
+            $category->setName($categoryName);
+            $manager->persist($category);
+        }
+
+        $manager->flush();
+
     }
-    
 }

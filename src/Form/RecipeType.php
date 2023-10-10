@@ -8,6 +8,7 @@ use App\Entity\Category;
 use App\Repository\IngredientRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Vich\UploaderBundle\Form\Type\VichImageType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -17,16 +18,13 @@ use Symfony\Component\Form\Extension\Core\Type\RangeType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class RecipeType extends AbstractType
 {
-
-
     private $token;
+
 
     public function __construct(TokenStorageInterface $token)
     {
@@ -164,17 +162,6 @@ class RecipeType extends AbstractType
                 'label_attr' => [
                     'class' => 'form-label mt-4'
                 ]
-                ])
-            ->add('category', EntityType::class, [
-                'class' => Category::class, // Spécifiez l'entité Categorie
-                'choice_label' => 'nom', // Utilisez le champ 'nom' de l'entité Categorie comme libellé dans la liste déroulante
-                'attr' => [
-                    'class' => 'form-control',
-                ],
-                'label' => 'Catégorie', // Libellé du champ
-                'label_attr' => [
-                    'class' => 'form-label mt-4',
-                ],
             ])
             ->add('ingredients', EntityType::class, [
                 'class' => Ingredient::class,
@@ -192,6 +179,18 @@ class RecipeType extends AbstractType
                 'choice_label' => 'name',
                 'multiple' => 'true',
                 'expanded' => 'true'
+            ])
+            ->add('category', EntityType::class, [
+                'class' => Category::class,
+                'choice_label' => 'name',  
+                'placeholder' => 'Sélectionnez une catégorie', 
+                'attr' => [
+                    'class' => 'form-control',
+                ],
+                'label' => 'Catégorie',
+                'label_attr' => [
+                    'class' => 'form-label mt-4',
+                ],
             ])
             ->add('submit', SubmitType::class, [
                 'attr' => [
