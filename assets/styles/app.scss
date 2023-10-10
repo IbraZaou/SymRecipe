@@ -21,10 +21,13 @@
 
 
 body {
+<<<<<<< HEAD
     background: rgb(0, 162, 52);
     background: linear-gradient(135deg, rgba(0, 162, 52, 1) 0%, rgba(0, 206, 215, 1) 100%);
     height: 100%;
 
+=======
+>>>>>>> 40365a71c43b6cbd7b733214197af9fcc19f67a7
     .btn {
         transition: .3s;
         border-radius: 10px;
@@ -38,7 +41,21 @@ body {
     h1,
     h2,
     h3,
-    h4 {
-        color: white;
+    h4,
+    p {
+        color: black !important;
+    }
+
+    .container_image_recipe {
+
+        height: 10rem;
+        width: 15rem;
+        margin-bottom: 1rem;
+
+        img {
+            width: 100%;
+            height: 100%;
+            border-radius: 20px;
+        }
     }
 }

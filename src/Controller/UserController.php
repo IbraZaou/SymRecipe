@@ -64,24 +64,18 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if($hasher->isPasswordValid($user, $form->getData()->getPlainPassword())) {
+
 
                 $user = $form->getData();
                 $manager->persist($user);
                 $manager->flush();
-    
+
                 $this->addFlash(
                     'success',
                     'Votre compte a bien été modifié !'
                 );
-    
+
                 return $this->redirectToRoute('recipe.index');
-            } else {
-                $this->addFlash(
-                    'warning',
-                    'Le mot de passe renseigné est incorrecte !'
-                );
-            }
         }
 
         return $this->render('pages/user/edit.html.twig', [

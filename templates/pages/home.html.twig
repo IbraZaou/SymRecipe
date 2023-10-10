@@ -23,14 +23,29 @@
 			<div id="commu-container-home" class="d-flex justify-content-between mt-4">
 				{% for recipe in recipes %}
 
-					<div id="card" class="card text-white bg-primary mb-3" style="max-width: 20rem;">
-						<div class="card-header">Recette n°{{ recipe.id }}</div>
-						<div class="card-body">
-							<h4 class="card-title">{{ recipe.name }}</h4>
-							<p class="card-text">{{ recipe.description|slice(0, 100) ~ '...' }}</p>
-						</div>
-					</div>
+					<a href="{{ path('recipe.show', {'id': recipe.id}) }}">
+						<div id="card" class="card text-white bg-primary mb-3" style="max-width: 20rem;">
+							<div class="card-header">Recette n°{{ recipe.id }}</div>
+							<div class="card-body">
 
+								{% if recipe.marks|length > 0 %}
+									<p>Note:
+										{{ recipe.average|number_format(2, '.', ',')}}
+										/ 5</p>
+								{% else %}
+									<p>Pas encore noté.</p>
+								{% endif %}
+
+								{% if recipe.imageName %}
+									<div class="container_image_recipe">
+										<img src="{{ vich_uploader_asset(recipe, 'imageFile') }}" alt="{{ recipe.name }}" class="img-fluid">
+									</div>
+								{% endif %}
+								<h4 class="card-title">{{ recipe.name }}</h4>
+								<p class="card-text">{{ recipe.description|slice(0, 100) ~ '...' }}</p>
+							</div>
+						</div>
+					</a>
 				{% endfor %}
 
 			</div>

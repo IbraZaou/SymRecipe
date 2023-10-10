@@ -21,7 +21,7 @@ class UserType extends AbstractType
                 'class' => 'form-control',
                 'minlength' => '2',
                 'maxlength' => '50',
-                'placeholde' => 'Nom / Prénom'
+                'placeholder' => 'Nom / Prénom'
             ],
             'label' => false,
             'label_attr' => [
