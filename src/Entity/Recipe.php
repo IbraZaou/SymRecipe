@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Entity\Ingredient;
+use App\Entity\Category;
 use App\Repository\RecipeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -84,6 +85,11 @@ class Recipe
 
     #[ORM\OneToMany(mappedBy: 'recipe', targetEntity: Mark::class, orphanRemoval: true)]
     private Collection $marks;
+
+    #[ORM\ManyToOne(targetEntity: Category::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Category $category = null;
+
 
     private ?float $average = null;
 
@@ -265,6 +271,8 @@ class Recipe
 
         return $this;
     }
+ 
+
 
     /**
      * @return Collection<int, Ingredient>
@@ -352,4 +360,19 @@ class Recipe
 
         return $this->average;
     }
+
+    // ... (constructeur, méthodes getters et setters pour les autres propriétés)
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategor(?Category $category): static
+    {
+        $this->category = $category;
+
+        return $this;
+    }
+
 }

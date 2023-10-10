@@ -6,6 +6,8 @@ use App\Entity\Mark;
 use App\Entity\Recipe;
 use App\Form\MarkType;
 use App\Form\RecipeType;
+use App\Entity\Category;
+use App\Repository\CategoryRepository;
 use App\Repository\MarkRepository;
 use App\Repository\RecipeRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -167,6 +169,7 @@ class RecipeController extends AbstractController
     public function new(
         Request $request,
         EntityManagerInterface $manager,
+        CategoryRepository $categorieRepository
     ) : Response {
 
             $recipe = new Recipe();
@@ -176,6 +179,12 @@ class RecipeController extends AbstractController
             if($form->isSubmitted() && $form->isValid()) {
                 $recipe = $form->getData();
                 $recipe->setUser($this->getUser());
+
+                // Récupérez les catégories depuis la base de données
+            $categories = $categorieRepository->findAll();
+                $categorie = $form->get('categorie')->getData();
+        $recipe->setCategorie($categorie);
+
 
                 $manager->persist($recipe);
                 $manager->flush();

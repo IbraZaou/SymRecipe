@@ -5,6 +5,7 @@ namespace App\DataFixtures;
 use Faker\Factory;
 use App\Entity\Mark;
 use App\Entity\User;
+use App\Entity\Category;
 use Faker\Generator;
 use App\Entity\Recipe;
 use App\Entity\Contact;
@@ -101,6 +102,22 @@ class AppFixtures extends Fixture
                     $manager->persist($mark);
             }
         }
+
+    
+        $categories = [
+            'Cuisine Végétarienne/Végétalienne',
+            'Recettes Santé',
+            // ... ajoutez d'autres catégories ici
+        ];
+
+        foreach ($categories as $categoryName) {
+            $categorie = new Category();
+            $categorie->setName($categoryName);
+            $manager->persist($categorie);
+            $this->addReference($categoryName, $categorie);
+        }
+
+        $manager->flush();
 
 
         // Contact 

@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Recipe;
 use App\Entity\Ingredient;
+use App\Entity\Category;
 use App\Repository\IngredientRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -16,6 +17,7 @@ use Symfony\Component\Form\Extension\Core\Type\RangeType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Vich\UploaderBundle\Form\Type\VichImageType;
@@ -83,8 +85,7 @@ class RecipeType extends AbstractType
                 'constraints' => [
                     new Assert\Positive(),
                     new Assert\LessThan(51)
-            ]
-            ])
+            ]])
             ->add('difficulty', RangeType::class, [
                 'attr' => [
                     'class' => 'form-range',
@@ -163,7 +164,18 @@ class RecipeType extends AbstractType
                 'label_attr' => [
                     'class' => 'form-label mt-4'
                 ]
-            ])     
+                ])
+            ->add('category', EntityType::class, [
+                'class' => Category::class, // Spécifiez l'entité Categorie
+                'choice_label' => 'nom', // Utilisez le champ 'nom' de l'entité Categorie comme libellé dans la liste déroulante
+                'attr' => [
+                    'class' => 'form-control',
+                ],
+                'label' => 'Catégorie', // Libellé du champ
+                'label_attr' => [
+                    'class' => 'form-label mt-4',
+                ],
+            ])
             ->add('ingredients', EntityType::class, [
                 'class' => Ingredient::class,
                 'query_builder' => function(IngredientRepository $r) {
