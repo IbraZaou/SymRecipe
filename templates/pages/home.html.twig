@@ -25,7 +25,11 @@
 
 					<a href="{{ path('recipe.show', {'id': recipe.id}) }}">
 						<div id="card" class="card text-white bg-primary mb-3" style="max-width: 20rem;">
-							<div class="card-header">Recette n°{{ recipe.id }}</div>
+							<div class="card-header">Recette n°{{ recipe.id }}
+								<br>
+								<span>Catégorie
+									{{recipe.category.name}}</span>
+							</div>
 							<div class="card-body">
 
 								{% if recipe.marks|length > 0 %}

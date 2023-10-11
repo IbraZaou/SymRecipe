@@ -5,40 +5,34 @@
 
 {% block body %}
 	<div id="container_commu" class="container mt-4">
-		{% if recipes.items is defined %}
+		{% if recipes|length > 0 %}
 			<h1>Recettes de la communauté</h1>
-
 
 			{{ form_start(form) }}
 			{{ form_widget(form.q, {'attr': {'class': 'form-control', 'placeholder': 'Rechercher votre recette'}}) }}
 			<button type="submit" class="btn btn-primary">Search</button>
 			{{ form_end(form) }}
-			
 
 			<div id="card_container_commu" class="d-flex flex-wrap">
 				{% for recipe in recipes %}
-
-					{# pour prendre chaque id différent on ajout {'id': recipe.id} après la route nécessaire #}
 					<a href="{{ path('recipe.show', {'id': recipe.id}) }}">
-
 						<div id="card" class="card text-white bg-primary mb-3" style="max-width: 20rem;">
 							<div class="card-header">Recette n°{{ recipe.id }}
-							<span>Catégorie {{recipe.category.name}}</span></div>
+								<span>Catégorie
+									{{ recipe.category.name }}</span>
+							</div>
 							<div class="card-body">
-
 								{% if recipe.marks|length > 0 %}
 									<p>Note:
 										{{ recipe.average|number_format(2, '.', ',')}}/5</p>
 								{% else %}
 									<p>Pas encore noté.</p>
 								{% endif %}
-
 								{% if recipe.imageName %}
 									<div class="container_image_recipe">
 										<img src="{{ vich_uploader_asset(recipe, 'imageFile') }}" alt="{{ recipe.name }}" class="img-fluid">
 									</div>
 								{% endif %}
-
 								<h4 class="card-title">{{ recipe.name }}</h4>
 								<p class="card-text">{{ recipe.description|slice(0, 100) ~ '...' }}</p>
 							</div>
@@ -47,20 +41,18 @@
 				{% endfor %}
 			</div>
 
+			<div class="navigation d-flex justify-content-center mt-4">
+				{{ knp_pagination_render(recipes) }}
+			</div>
+
+			<a href="{{ path('recipe.new') }}">
+				<button type="submit" class="btn btn-primary mt-4">
+					Ajouter une recette
+				</button>
+			</a>
 		{% else %}
-			<h4>Il n'y a pas de recettes</h4>
+			<h4>Il n'y a pas de recettes... :(</h4>
+			{# Display a flash message for no recipes found #}
 		{% endif %}
-
-		<div class="navigation d-flex justify-content-center mt-4">
-			{{ knp_pagination_render(recipes) }}
-		</div>
-
-
-		<a href="{{ path('recipe.new') }}">
-			<button type="submit" class="btn btn-primary mt-4">
-				Ajouter une recette
-			</button>
-		</a>
-
 	</div>
 {% endblock %}

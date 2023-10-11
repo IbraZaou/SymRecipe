@@ -53,10 +53,10 @@ class RecipeRepository extends ServiceEntityRepository
     {
         $data = $this->createQueryBuilder('r');
 
-        if(!empty($searchData->r)) {
+        if(!empty($searchData->q)) {
             $data = $data
                 ->andWhere('r.name LIKE :r')
-                ->setParameter('r', "%{$searchData->r}");
+                ->setParameter('r', "%{$searchData->q}%");
         }
 
         $data = $data

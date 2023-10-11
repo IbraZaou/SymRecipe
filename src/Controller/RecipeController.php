@@ -83,6 +83,10 @@ class RecipeController extends AbstractController
             $searchData->page = $request->query->getInt('page', 1);
             $recipes = $repository->findBySearch($searchData);
 
+            if ($recipes->count() === 0) {
+                $this->addFlash('warning', 'No recipe found.');
+            }
+
             return $this->render('pages/recipe/index_public.html.twig', [
                 'form' => $form->createView(),
                 'recipes' => $recipes
