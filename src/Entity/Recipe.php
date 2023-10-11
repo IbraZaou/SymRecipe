@@ -86,9 +86,8 @@ class Recipe
     #[ORM\OneToMany(mappedBy: 'recipe', targetEntity: Mark::class, orphanRemoval: true)]
     private Collection $marks;
 
-    #[ORM\ManyToMany(targetEntity: Category::class)]
-    #[ORM\JoinColumn(nullable: false)]
-    private $category;
+    #[ORM\ManyToOne(inversedBy: 'recipes')]
+    private Category $category;
 
     private ?float $average = null;
 

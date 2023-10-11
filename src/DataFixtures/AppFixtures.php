@@ -67,6 +67,36 @@ class AppFixtures extends Fixture
                 $manager->persist($ingredient);
         }
 
+        // catégories
+        $categoriesInit = [
+            "Santé",
+            "Desserts",
+            "Rapides et Faciles",
+            "Traditionnelles",
+            "Pour Enfants",
+            "Fête",
+            "Cocktails et Boissons", 
+            "Produits de Saison",
+            "Petits Déjeuners et Brunchs",
+            "Plats Uniques",
+            "Confitures et Conserves",
+            "Grillades et Barbecue",
+            "Pâtes et Risottos",
+            "Soupes et Potages",
+            "Poissons et Fruits de Mer",
+            "Snacks et Apéritifs",
+            "Pain et Pâtisseries",
+        ];
+
+        $categories = [];
+        for ($j=0; $j < count($categoriesInit); $j++) { 
+            $category = new Category();
+            $category->setName($categoriesInit[$j]);
+
+            $categories[] = $category;
+            $manager->persist($category);
+        }
+
         // Recipes
         $recipes = [];
         for ($j=0 ; $j < 25; $j++ ) { 
@@ -79,7 +109,8 @@ class AppFixtures extends Fixture
                 ->setPrice(mt_rand(0, 1) == 1 ? mt_rand(1, 1000) : null)
                 ->setIsFavorite(mt_rand(0, 1) == 1 ? true : false)
                 ->setIsPublic(mt_rand(0, 1) == 1 ? true : false)
-                ->setUser($users[mt_rand(0, count($users) - 1)]);
+                ->setUser($users[mt_rand(0, count($users) - 1)])
+                ->setCategory($categories[mt_rand(0, count($categories) - 1)]);
 
 
             for ($k = 0; $k < mt_rand(5, 15); $k++) { 
@@ -114,36 +145,6 @@ class AppFixtures extends Fixture
                 ->setMessage($this->faker->text());
 
                 $manager->persist($contact);
-        }
-    
-        $manager->flush(); 
-
-
-        // catégories
-        $categories = [
-            "Santé",
-            "Desserts",
-            "Rapides et Faciles",
-            "Traditionnelles",
-            "Pour Enfants",
-            "Fête",
-            "Cocktails et Boissons", 
-            "Produits de Saison",
-            "Petits Déjeuners et Brunchs",
-            "Plats Uniques",
-            "Confitures et Conserves",
-            "Grillades et Barbecue",
-            "Pâtes et Risottos",
-            "Soupes et Potages",
-            "Poissons et Fruits de Mer",
-            "Snacks et Apéritifs",
-            "Pain et Pâtisseries",
-        ];
-
-        foreach ($categories as $categoryName) {
-            $category = new Category();
-            $category->setName($categoryName);
-            $manager->persist($category);
         }
 
         $manager->flush();
