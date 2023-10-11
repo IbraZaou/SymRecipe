@@ -8,6 +8,13 @@
 		{% if recipes.items is defined %}
 			<h1>Recettes de la communauté</h1>
 
+
+			{{ form_start(form) }}
+			{{ form_widget(form.q, {'attr': {'class': 'form-control', 'placeholder': 'Rechercher votre recette'}}) }}
+			<button type="submit" class="btn btn-primary">Search</button>
+			{{ form_end(form) }}
+			
+
 			<div id="card_container_commu" class="d-flex flex-wrap">
 				{% for recipe in recipes %}
 

@@ -7,6 +7,8 @@ use App\Entity\Recipe;
 use App\Entity\Category;
 use App\Form\MarkType;
 use App\Form\RecipeType;
+use App\Form\SearchType;
+use App\Model\SearchData;
 use App\Repository\MarkRepository;
 use App\Repository\RecipeRepository;
 use App\Repository\CategoryRepository;
@@ -70,6 +72,23 @@ class RecipeController extends AbstractController
         Request $request
     ): Response{
 
+        $searchData = new SearchData();
+
+        // creation du formulaire
+        $form = $this->createForm(SearchType::class, $searchData);
+
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()) {
+            
+            $searchData->page = $request->query->getInt('page', 1);
+            $recipes = $repository->findBySearch($searchData);
+
+            return $this->render('pages/recipe/index_public.html.twig', [
+                'form' => $form->createView(),
+                'recipes' => $recipes
+            ]);
+        }
+
         $cache = new FilesystemAdapter();
         $data = $cache->get('recipes', function (ItemInterface $item) use ($repository) {
             $item->expiresAfter(15);
@@ -84,6 +103,8 @@ class RecipeController extends AbstractController
 
 
         return $this->render('pages/recipe/index_public.html.twig', [
+            //pour passer le formulaire en front sinon ca marche pas 
+            'form' =>$form->createView(),
             'recipes' => $recipes
         ]);
     }
