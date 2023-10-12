@@ -17,17 +17,13 @@
 @import '../pages/partials/registration_form';
 
 
-@import '/node_modules/animate.css/animate.css';
+
+
 
 
 body {
-<<<<<<< HEAD
-    background: rgb(0, 162, 52);
-    background: linear-gradient(135deg, rgba(0, 162, 52, 1) 0%, rgba(0, 206, 215, 1) 100%);
     height: 100%;
 
-=======
->>>>>>> 40365a71c43b6cbd7b733214197af9fcc19f67a7
     .btn {
         transition: .3s;
         border-radius: 10px;
@@ -57,5 +53,12 @@ body {
             height: 100%;
             border-radius: 20px;
         }
+    }
+
+
+    .clicked {
+        color: #3cff00;
+        /* Change this to the desired color */
+        /* Add any other styles you want to apply when the span is clicked */
     }
 }

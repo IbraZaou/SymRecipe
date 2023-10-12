@@ -1,6 +1,4 @@
 #recipe_container {
-
-    height: 100vh;
     @include FlexCenter;
 
     .tableau_recipe {
@@ -109,7 +107,6 @@
 
 // publique recipe
 #container_commu {
-    height: 140vh;
     @include FlexCenter;
     flex-direction: column;
 
@@ -118,7 +115,6 @@
     }
 
     #card_container_commu {
-        height: 80vh;
         width: 80vw;
         background-color: #fff;
         display: flex;

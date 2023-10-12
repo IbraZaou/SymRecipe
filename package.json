@@ -20,6 +20,8 @@
         "build": "encore production --progress"
     },
     "dependencies": {
-        "animate.css": "^4.1.1"
+        "@fortawesome/fontawesome-free": "^6.4.2",
+        "animate.css": "^4.1.1",
+        "axios": "^1.5.1"
     }
 }

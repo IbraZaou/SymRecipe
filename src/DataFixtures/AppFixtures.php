@@ -10,6 +10,8 @@ use App\Entity\Recipe;
 use App\Entity\Contact;
 use App\Entity\Category;
 use App\Entity\Ingredient;
+use App\Repository\UserRepository;
+use App\Repository\RecipeRepository;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 
@@ -18,9 +20,14 @@ class AppFixtures extends Fixture
 
     private Generator $faker;
 
-    public function __construct()
+    public function __construct(
+        private RecipeRepository $recipeRepository,
+        private UserRepository $userRepository
+
+    )
     {
         $this->faker = Factory::create('fr FR');
+        
     }
 
     public function load(ObjectManager $manager): void
@@ -146,6 +153,26 @@ class AppFixtures extends Fixture
 
                 $manager->persist($contact);
         }
+
+
+        // Likes
+        $users = $this->userRepository->findAll();
+        $recipes = $this->recipeRepository->findAll();
+
+        foreach ($recipes as $recipe) {
+            for ($i = 0; $i < mt_rand(0, 15); $i++) {
+                // Generate a random index for the users array
+                $userIndex = mt_rand(0, count($users) - 1);
+        
+                // Get a random user from the users array using Faker
+                $randomUser = $this->faker->randomElement($users);
+        
+                // Add the like to the recipe
+                $recipe->addLike($randomUser);
+            }
+        }
+
+
 
         $manager->flush();
 

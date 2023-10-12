@@ -7,4 +7,16 @@
 
 // any CSS you import will output into a single css file (app.css in this case)
 import './styles/app.scss';
+import '../node_modules/@fortawesome/fontawesome-free/css/all.css'
 
+import Like from './scripts/like';
+
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('Webpack Encore is working !');
+
+    // Like's system
+    const likeElements = [].slice.call(document.querySelectorAll('a[data-action="like"]'));
+    if (likeElements) {
+        new Like(likeElements);
+    }
+})
