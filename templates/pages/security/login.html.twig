@@ -1,49 +1,45 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}SymRecipe - Connexion
+{% block title %}Log in!
 {% endblock %}
+
 {% block body %}
-
-	<div id="login_container" class="container">
-		<h1 class="mt-4">Formulaire de connexion</h1>
-
-		{% for message in app.flashes('success') %}
-			<div class="alert alert-success mt-4">
-				{{ message }}
-			</div>
-		{% endfor %}
-
+	<form method="post">
 		{% if error %}
-			<div class="alert alert alert-danger">
-				{{ error.messageKey|trans(error.messageData, 'security') }}
+			<div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+		{% endif %}
+
+		{% if app.user %}
+			<div class="mb-3">
+				You are logged in as
+				{{ app.user.userIdentifier }},
+				<a href="{{ path('security.logout') }}">Logout</a>
 			</div>
 		{% endif %}
 
+		<h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+		<label for="inputEmail">Email</label>
+		<input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
+		<label for="inputPassword">Password</label>
+		<input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
 
-		<form id="login_form" action="{{ path('security.login') }}" method="post">
-			<div class="form-group">
-				<input type="email" class="form-control" id="username" name="_username" placeholder="Email" value="{{ last_username }}">
-			</div>
-			<div class="form-group">
-				<input type="password" class="form-control" id="password" name="_password" placeholder="Mot de passe" autocomplete="off">
-			</div>
+		<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
-			<button type="submit" class="btn btn-primary mt-4">
-				Se connecter</button>
+		<button class="btn btn-lg btn-primary" type="submit">
+			Sign in
+		</button>
 
-			<p class="mt-4">Mot de passe oublié ? cliqué
-				<a href="{{ path('app_forgot_password_request') }}">
-					ici
-				</a>
-			</p>
+		<p class="mt-4">Mot de passe oublié ? cliqué
+			<a href="{{ path('app_forgot_password_request') }}">
+				ici
+			</a>
+		</p>
 
-			<p class="mt-4">Vous n'avez pas de compte inscrivez-vous en cliquant
-				<a href="{{ path('security.registration') }}">
-					ici
-				</a>
-			</p>
-		</form>
-	</div>
+		<p class="mt-4">Vous n'avez pas de compte inscrivez-vous en cliquant
+			<a href="{{ path('security.registration') }}">
+				ici
+			</a>
+		</p>
 
-
+	</form>
 {% endblock %}

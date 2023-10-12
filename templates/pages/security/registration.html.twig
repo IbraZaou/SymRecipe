@@ -1,16 +1,14 @@
-{% extends "base.html.twig" %}
+{% extends 'base.html.twig' %}
 
-{% block title %}SymRecipe - Inscription
+{% block title %}Register
 {% endblock %}
 
 {% block body %}
+	<h1>Register</h1>
 
+	{{ form_errors(registrationType) }}
 
-	<div id="test_form" class="container">
-		<h1 class="mt-4">Formulaire d'inscription</h1>
+	{{ form_start(registrationType) }}
 
-		{{ form(form) }}
-
-		</div>
-
-	{% endblock %}
+	{{ form_end(registrationType) }}
+{% endblock %}
