@@ -9,7 +9,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Mapping\JoinTable;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\HttpFoundation\File\File;
@@ -92,18 +91,12 @@ class Recipe
 
     private ?float $average = null;
 
-    //Création de lien MTM et créer une table de jointure
-    #[ORM\ManyToMany(targetEntity: User::class)]
-    #[JoinTable('user_recipe_like')]
-    private Collection $likes;
-
     public function __construct()
     {
         $this->ingredients = new ArrayCollection();
         $this->createdAt = new \DateTimeImmutable;
         $this->updatedAt = new \DateTimeImmutable;
         $this->marks = new ArrayCollection();
-        $this->likes = new ArrayCollection();
     }
 
     #[ORM\PrePersist()]
@@ -275,7 +268,6 @@ class Recipe
 
         return $this;
     }
- 
 
 
     /**
@@ -378,35 +370,4 @@ class Recipe
 
         return $this;
     }
-
-    public function getLikes(): Collection{
-        return $this->likes;
-    }
-
-    public function addLike(User $like): self 
-    {
-        if(!$this->likes->contains($like)) {
-            $this->likes[] = $like;
-        }
-
-        return $this;
-    }
-
-    public function removeLike(User $like) : self {
-        $this->likes->removeElement($like);
-
-        return $this;
-    }
-
-    public function isLikedByUser(User $user) : ?bool {
-
-        return $this->likes->contains($user);
-    }
-
-    public function howManyLikes(): int
-    {
-        return count($this->likes);
-    }
-
-
 }

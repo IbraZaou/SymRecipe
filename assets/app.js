@@ -11,6 +11,7 @@ import '../node_modules/@fortawesome/fontawesome-free/css/all.css'
 
 import Like from './scripts/like';
 
+
 document.addEventListener('DOMContentLoaded', () => {
     console.log('Webpack Encore is working !');
 
@@ -19,4 +20,5 @@ document.addEventListener('DOMContentLoaded', () => {
     if (likeElements) {
         new Like(likeElements);
     }
+
 })
