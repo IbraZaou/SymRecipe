@@ -8,6 +8,14 @@
 
 	<div id="container" class="container mt-4">
 		<div id="container_home" class="jumbotron">
+
+
+			{% for message in app.flashes('success') %}
+				<div class="alert alert-success mt-4">
+					{{ message }}
+				</div>
+			{% endfor %}
+
 			<h1 class="display-4">Bienvenue sur
 				<span>SymRecipe</span>
 			</h1>
@@ -59,6 +67,7 @@
 					Voir toutes les recettes de la communauté
 				</button>
 			</a>
+
 		</div>
 
 	</div>

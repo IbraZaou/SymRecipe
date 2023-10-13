@@ -9,11 +9,12 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Http\Attribute\CurrentUser;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class UserController extends AbstractController
 {
@@ -75,11 +76,12 @@ class UserController extends AbstractController
                     'Votre compte a bien été modifié !'
                 );
 
-                return $this->redirectToRoute('recipe.index');
+                return $this->redirectToRoute('home.index');
         }
 
         return $this->render('pages/user/edit.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'user' => $user
         ]);
     }
 
@@ -149,4 +151,33 @@ class UserController extends AbstractController
             'form' => $form->createView()
         ]);
     }
+
+
+    //comme la route est sur edit, tu dois passer après form 'user' => $user
+    //Sinon il capte pas la variable user ici 
+
+    
+    //Delete user
+    #[Route('/utilisateur/suppression/{id}', name: 'user.delete')]
+    public function delete(
+        UserRepository $user,
+        EntityManagerInterface $manager,
+        // #[CurrentUser] UserInterface $currentUser
+        ): Response
+    {
+
+        $user = $this->getUser();
+
+                $manager->remove($user);
+                $manager->flush();
+
+                $this->addFlash(
+                    'success',
+                    'Votre compte à bien été supprimé !'
+                );
+
+                return $this->redirectToRoute('security.logout');
+        
+    }
+
 }

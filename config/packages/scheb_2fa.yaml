@@ -7,8 +7,7 @@ scheb_two_factor:
 # config/packages/scheb_2fa.yaml
     email:
         enabled: true
-        sender_email: no-reply@example.com
-        sender_name: John Doe  # Optional
+        sender_email: no-reply@symrecipe.fr
 
     trusted_device:
         enabled: true                 # If the trusted device feature should be enabled
