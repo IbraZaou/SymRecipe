@@ -2,13 +2,12 @@
 
 namespace App\Entity;
 
-use App\Repository\CategoryRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: CategoryRepository::class)]
-class Category
+use Doctrine\ORM\Mapping as ORM;
+use App\Repository\UstensilRepository;
+
+#[ORM\Entity(repositoryClass: UstensilRepository::class)]
+class Ustensil
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -17,17 +16,6 @@ class Category
 
     #[ORM\Column(length: 255)]
     private ?string $name = null;
-
-    #[ORM\OneToMany(mappedBy: 'category', targetEntity: Recipe::class)]
-    private Collection $recipes;
-
-        /**
-     * Constructor
-     */
-
-    public function __construct() {
-        $this->recipes = new ArrayCollection();
-    }
 
     public function getId(): ?int
     {

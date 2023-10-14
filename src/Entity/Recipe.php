@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Entity\Ingredient;
 use App\Entity\Category;
+use App\Entity\Ustensil;
 use App\Repository\RecipeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -89,6 +90,10 @@ class Recipe
     #[ORM\ManyToOne(inversedBy: 'recipes')]
     private Category $category;
 
+    #[ORM\ManyToMany(targetEntity: Ustensil::class)]
+    #[ORM\JoinTable(name: 'recipe_ustensil')]
+    private Collection $ustensils;
+
     private ?float $average = null;
 
     public function __construct()
@@ -97,6 +102,8 @@ class Recipe
         $this->createdAt = new \DateTimeImmutable;
         $this->updatedAt = new \DateTimeImmutable;
         $this->marks = new ArrayCollection();
+        $this->ustensils = new ArrayCollection();
+
     }
 
     #[ORM\PrePersist()]
@@ -370,4 +377,24 @@ class Recipe
 
         return $this;
     }
+
+
+    /**
+     * @return Collection<int, Ustensil>
+     */
+    public function getUstensils(): Collection
+    {
+        return $this->ustensils;
+    }
+
+    // Add a method to add ustensils to the recipe
+    public function addUstensil(Ustensil $ustensil): static
+    {
+        if (!$this->ustensils->contains($ustensil)) {
+            $this->ustensils[] = $ustensil;
+        }
+
+        return $this;
+    }
+
 }

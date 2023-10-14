@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Recipe;
 use App\Entity\Ingredient;
 use App\Entity\Category;
+use App\Entity\Ustensil;
 use App\Repository\IngredientRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -188,6 +189,20 @@ class RecipeType extends AbstractType
                     'class' => 'form-control',
                 ],
                 'label' => 'Catégorie',
+                'label_attr' => [
+                    'class' => 'form-label mt-4',
+                ],
+            ])
+            ->add('ustensil', EntityType::class, [
+                'class' => Ustensil::class,
+                'choice_label' => 'name',
+                'multiple' => 'true',
+                'expanded' => 'true',
+                'placeholder' => 'Sélectionnez les ustensils nécessaire pour la préparation de cette recette', 
+                'attr' => [
+                    'class' => 'form-control',
+                ],
+                'label' => 'Ustensil',
                 'label_attr' => [
                     'class' => 'form-label mt-4',
                 ],

@@ -11,6 +11,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\ResetPasswordRequestRepository;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -165,6 +166,7 @@ class UserController extends AbstractController
         EntityManagerInterface $manager,
         Request $request,
         RecipeRepository $recipeRepository,
+        ResetPasswordRequestRepository $resetPasswordRequestRepository,
         // #[CurrentUser] UserInterface $currentUser
         ): Response
     {
@@ -175,11 +177,19 @@ class UserController extends AbstractController
           // Get the user's recipes
     $recipes = $recipeRepository->findBy(['user' => $user]);
 
+
+    $resetPasswordRequests = $resetPasswordRequestRepository->findBy(['user' => $user]);
+
+    
+    // Delete each reset password request
+    foreach ($resetPasswordRequests as $resetPasswordRequest) {
+        $manager->remove($resetPasswordRequest);
+    }
+
     // Delete each recipe
     foreach ($recipes as $recipe) {
         $manager->remove($recipe);
     }
-
 
                 $manager->remove($user);
                 $manager->flush();
@@ -190,7 +200,7 @@ class UserController extends AbstractController
                 );
             
 
-                return $this->redirectToRoute('security.logout');
+                return $this->redirectToRoute('home.index');
         
     }
 

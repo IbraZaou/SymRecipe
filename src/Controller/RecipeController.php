@@ -74,7 +74,7 @@ class RecipeController extends AbstractController
 
         $searchData = new SearchData();
 
-        // creation du formulaire
+        // creation du formulaire (la barre de recherche)
         $form = $this->createForm(SearchType::class, $searchData);
 
         $form->handleRequest($request);

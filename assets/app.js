@@ -9,16 +9,5 @@
 import './styles/app.scss';
 import '../node_modules/@fortawesome/fontawesome-free/css/all.css'
 
-import Like from './scripts/like';
+import './scripts/passwordToggleLogin';
 
-
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('Webpack Encore is working !');
-
-    // Like's system
-    const likeElements = [].slice.call(document.querySelectorAll('a[data-action="like"]'));
-    if (likeElements) {
-        new Like(likeElements);
-    }
-
-})

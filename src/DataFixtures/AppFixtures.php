@@ -5,11 +5,12 @@ namespace App\DataFixtures;
 use Faker\Factory;
 use App\Entity\Mark;
 use App\Entity\User;
+use App\Entity\Ingredient;
+use App\Entity\Ustensil;
 use Faker\Generator;
 use App\Entity\Recipe;
 use App\Entity\Contact;
 use App\Entity\Category;
-use App\Entity\Ingredient;
 use App\Repository\UserRepository;
 use App\Repository\RecipeRepository;
 use Doctrine\Persistence\ObjectManager;
@@ -104,6 +105,71 @@ class AppFixtures extends Fixture
             $manager->persist($category);
         }
 
+        // ustensils
+
+        $ustensilsInit = [
+                "Couteaux" ,
+                "Couteau de chef",
+                "Couteau à découper",
+                "Couteau d'office",
+                "Couteau à pain",
+                "Planche à découper" ,
+                "Bols et Saladiers" ,
+                "Bols en acier inoxydable",
+                "Bols en verre",
+                "Saladiers en plastique",
+                "Casseroles et Poêles" ,
+                "Cuillères et Spatules" ,
+                "Cuillère en bois",
+                "Spatule en silicone",
+                "Cuillère à fente",
+                "Fouets" ,
+                "Fouet en métal",
+                "Fouet en silicone",
+                "Éplucheurs et Râpes" ,
+                "Éplucheur de légumes",
+                "Râpe à fromage",
+                "Râpe à légumes",
+                "Moules et Plaques de Cuisson" ,
+                "Moules à gâteaux",
+                "Moules à muffins",
+                "Plaque à biscuits",
+                "Tapis de Cuisson et Papier Parchemin" ,
+                "Tapis de cuisson en silicone",
+                "Papier parchemin",
+                "Mixeurs et Batteurs" ,
+                "Mixeur plongeant",
+                "Batteur électrique",
+                "Balance de Cuisine" ,
+                "Balance électronique",
+                "Thermomètre de Cuisine",
+                "Thermomètre à viande",
+                "Thermomètre à sucre",
+                "Presse-Agrumes",
+                "Passoire en acier inoxydable",
+                "Tamis en maille fine",
+                "Mortier et Pilon" ,
+                "Mortier en pierre",
+                "Pilon en bois",
+                "Rouleau à Pâtisserie",
+                "Pinceaux de Cuisine" ,
+                "Pinceaux en silicone pour badigeonner",
+                "Sacs de Congélation et Film Alimentaire",
+                "Sacs de congélation",
+                "Film alimentaire",
+        ];
+
+            $ustensils = [];
+            for ($l = 0; $l < count($ustensilsInit); $l++) {
+                $ustensil = new Ustensil();
+                $ustensil->setName($ustensilsInit[$l]);
+            
+                $ustensils[] = $ustensil;
+                $manager->persist($ustensil);
+            }
+            
+
+
         // Recipes
         $recipes = [];
         for ($j=0 ; $j < 25; $j++ ) { 
@@ -153,25 +219,6 @@ class AppFixtures extends Fixture
 
                 $manager->persist($contact);
         }
-
-
-        // Likes
-        $users = $this->userRepository->findAll();
-        $recipes = $this->recipeRepository->findAll();
-
-        foreach ($recipes as $recipe) {
-            for ($i = 0; $i < mt_rand(0, 15); $i++) {
-                // Generate a random index for the users array
-                $userIndex = mt_rand(0, count($users) - 1);
-        
-                // Get a random user from the users array using Faker
-                $randomUser = $this->faker->randomElement($users);
-        
-                // Add the like to the recipe
-                $recipe->addLike($randomUser);
-            }
-        }
-
 
 
         $manager->flush();

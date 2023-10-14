@@ -48,7 +48,7 @@ class UserPasswordType extends AbstractType
                 new Assert\NotBlank(),
                 new Length([
                     'min' => 6,
-                    'minMessage' => 'Le mot de passe doit avoir au moins {{ limit }} caractères.',
+                    'minMessage' => 'Le mot de passe doit avoir au moins {{ min }} caractères.',
                     // longueur maximale peut également être spécifiée ici
                 ]),
                 new Regex([

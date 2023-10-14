@@ -16,6 +16,14 @@
 				</div>
 			{% endfor %}
 
+			{% if app.user %}
+				<div class="mb-3">
+					Vous êtes connecté en tant que
+					{{ app.user.userIdentifier }},
+					<a href="{{ path('security.logout') }}">Déconnexion</a>
+				</div>
+			{% endif %}
+
 			<h1 class="display-4">Bienvenue sur
 				<span>SymRecipe</span>
 			</h1>
@@ -24,6 +32,12 @@
 			<p>Pour commencer, rendez-vous sur la page d'inscription pour utiliser l'application.</p>
 			<a class="btn btn-primary btn-lg" href="{{ path('security.registration') }}" role="button">Inscription</a>
 		</div>
+
+
+		{{ form_start(form) }}
+		{{ form_widget(form.q, {'attr': {'class': 'form-control', 'placeholder': 'Rechercher votre recette'}}) }}
+		<button type="submit" class="btn btn-primary">Search</button>
+		{{ form_end(form) }}
 
 		<div class="recipes">
 			<h2>Recette de la communauté
