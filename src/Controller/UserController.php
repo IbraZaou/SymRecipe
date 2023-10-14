@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Form\UserType;
 use App\Form\UserPasswordType;
 use App\Repository\UserRepository;
@@ -155,18 +156,19 @@ class UserController extends AbstractController
 
     //comme la route est sur edit, tu dois passer après form 'user' => $user
     //Sinon il capte pas la variable user ici 
-
     
     //Delete user
     #[Route('/utilisateur/suppression/{id}', name: 'user.delete')]
     public function delete(
-        UserRepository $user,
+        User $user,
         EntityManagerInterface $manager,
+        Request $request,
         // #[CurrentUser] UserInterface $currentUser
         ): Response
     {
 
-        $user = $this->getUser();
+        $user = $user->getUser();
+        $this->container->get('security.token_storage')->setToken(null);
 
                 $manager->remove($user);
                 $manager->flush();
@@ -175,6 +177,7 @@ class UserController extends AbstractController
                     'success',
                     'Votre compte à bien été supprimé !'
                 );
+            
 
                 return $this->redirectToRoute('security.logout');
         
