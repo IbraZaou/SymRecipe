@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Form\UserType;
 use App\Form\UserPasswordType;
 use App\Repository\UserRepository;
+use App\Repository\RecipeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -163,12 +164,22 @@ class UserController extends AbstractController
         User $user,
         EntityManagerInterface $manager,
         Request $request,
+        RecipeRepository $recipeRepository,
         // #[CurrentUser] UserInterface $currentUser
         ): Response
     {
 
         $user = $user->getUser();
         $this->container->get('security.token_storage')->setToken(null);
+
+          // Get the user's recipes
+    $recipes = $recipeRepository->findBy(['user' => $user]);
+
+    // Delete each recipe
+    foreach ($recipes as $recipe) {
+        $manager->remove($recipe);
+    }
+
 
                 $manager->remove($user);
                 $manager->flush();
