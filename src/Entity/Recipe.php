@@ -96,6 +96,7 @@ class Recipe
 
     private ?float $average = null;
 
+
     public function __construct()
     {
         $this->ingredients = new ArrayCollection();

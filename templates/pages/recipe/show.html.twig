@@ -76,10 +76,14 @@
 		<h2 class="mt-4">Catégorie</h2>
 		<span class="badge bg-primary">{{recipe.category.name}}</span>
 
+		<h2 class="mt-4">Ustensils</h2>
+		{% for ustensil in recipe.ustensils %}
+			<span class="badge bg-primary">{{ustensil.name}}</span>
+		{% endfor %}
+
 		<div class="mark">
 			{{form(form)}}
 			</div>
-
 		</div>
 
 

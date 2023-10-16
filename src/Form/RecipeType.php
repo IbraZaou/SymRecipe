@@ -7,6 +7,7 @@ use App\Entity\Ingredient;
 use App\Entity\Category;
 use App\Entity\Ustensil;
 use App\Repository\IngredientRepository;
+use App\Repository\UstensilRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Vich\UploaderBundle\Form\Type\VichImageType;
@@ -193,19 +194,20 @@ class RecipeType extends AbstractType
                     'class' => 'form-label mt-4',
                 ],
             ])
-            ->add('ustensil', EntityType::class, [
+            ->add('ustensils', EntityType::class, [
                 'class' => Ustensil::class,
-                'choice_label' => 'name',
-                'multiple' => 'true',
-                'expanded' => 'true',
-                'placeholder' => 'Sélectionnez les ustensils nécessaire pour la préparation de cette recette', 
-                'attr' => [
-                    'class' => 'form-control',
-                ],
-                'label' => 'Ustensil',
+                'query_builder' => function(UstensilRepository $r) {
+                    return $r->createQueryBuilder('i')
+                    ->orderBy('i.name', 'ASC');
+                },
+                'label' => "Les ustensils",
                 'label_attr' => [
                     'class' => 'form-label mt-4',
+                    'id' => 'choix_ingredient'
                 ],
+                'choice_label' => 'name',
+                'multiple' => 'true',
+                'expanded' => 'true'
             ])
             ->add('submit', SubmitType::class, [
                 'attr' => [
