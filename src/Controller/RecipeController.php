@@ -4,8 +4,10 @@ namespace App\Controller;
 
 use App\Entity\Mark;
 use App\Entity\Recipe;
-use App\Entity\Category;
 use App\Form\MarkType;
+use App\Entity\Category;
+use App\Entity\Comments;
+use App\Form\CommentsType;
 use App\Form\RecipeType;
 use App\Form\SearchType;
 use App\Model\SearchData;
@@ -166,9 +168,24 @@ class RecipeController extends AbstractController
             throw new AccessDeniedException('Access denied');
         }
 
+
+        // parties commentaires
+        // Création du commentaire vide
+        $comment = new Comments;
+
+        //On génère le formulaire
+        $commentForm = $this->createForm(CommentsType::class, $comment);
+
+        // Permet de gérer les différents champs qui vont être gérer
+        $commentForm->handleRequest($request);
+
+        //traitement du formulaire
+
+
         return $this->render('pages/recipe/show.html.twig', [
             'recipe' => $recipe,
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'commentForm' => $commentForm->createView()
         ]);
 
         
