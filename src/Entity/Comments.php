@@ -26,7 +26,7 @@ class Comments
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $username = null;
+    private ?string $fullName = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
@@ -90,14 +90,14 @@ class Comments
         return $this;
     }
 
-    public function getUsername(): ?string
+    public function getFullName(): ?string
     {
-        return $this->username;
+        return $this->fullName;
     }
 
-    public function setUsername(string $username): static
+    public function setFullName(string $fullName): static
     {
-        $this->username = $username;
+        $this->fullName = $fullName;
 
         return $this;
     }

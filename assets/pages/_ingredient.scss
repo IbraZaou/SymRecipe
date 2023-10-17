@@ -1,6 +1,4 @@
 #ingredient_container {
-
-    height: 100vh;
     @include FlexCenter;
 
     .tableau_ingredient {
@@ -16,7 +14,6 @@
 // Form Add new ingredient
 
 #form_container_ingredient {
-    height: 70vh;
     @include FlexCenter;
     flex-direction: column;
 

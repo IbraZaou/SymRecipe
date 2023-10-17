@@ -86,7 +86,37 @@
 			</div>
 
 			<h2>Liste des commentaires</h2>
-			<div class="commentaire">
+			{% set commentNumber = 1 %}
+			{% for comment in recipe.comments %}
+
+				{% if comment.parent == null %}
+					<h3>Commentaire n°
+						{{ commentNumber }}</h3>
+					{# H:i --> Heure et minutes #}
+					<p>publié par
+						{{comment.fullName}}
+						le
+						{{comment.createdAt|date("d/m/Y H:i")}}</p>
+					<div>
+						{{comment.content}}</div>
+					<br>
+					{# Data-reply (c'est 	nous qu'on a créer) et ca permet de mettre un listener en JS #}
+					<a href="#ajout_commentaire" class="btn btn-primary mt-4" data-reply data-id="{{comment.id}}">Répondre</a>
+					{# On affiche les réponses #}
+					{% for reply in comment.replies %}
+						<p>Réponse publié par
+							{{reply.fullName}}
+							le
+							{{reply.createdAt|date("d/m/Y H:i")}}</p>
+						<div>
+							{{reply.content}}</div>
+						<br>
+					{% endfor %}
+					{% set commentNumber = commentNumber + 1 %}
+				{% endif %}
+			{% endfor %}
+
+			<div id="ajout_commentaire" class="commentaire">
 				<h2>ajouter un commentaire</h2>
 				{{form(commentForm)}}
 				</div>
@@ -94,4 +124,13 @@
 			</div>
 
 
+			{# JAVASCRIPT #}
+			<script>
+				// Création d'un listener sur tous les boutons répondre
+document.querySelectorAll("[data-reply]").forEach(element => {
+element.addEventListener("click", function () {
+document.querySelector("#comments_parentid").value = this.dataset.id;
+});
+});
+			</script>
 		{% endblock %}

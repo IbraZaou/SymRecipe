@@ -14,6 +14,7 @@ use App\Model\SearchData;
 use App\Repository\MarkRepository;
 use App\Repository\RecipeRepository;
 use App\Repository\CategoryRepository;
+use App\Repository\CommentsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -125,6 +126,7 @@ class RecipeController extends AbstractController
     #[IsGranted('ROLE_USER')]
     public function show(
     Recipe $recipe,
+    CommentsRepository $commentsRepository,
     AuthorizationCheckerInterface $authorizationChecker,
     Request $request,
     MarkRepository $markRepository,
@@ -173,6 +175,11 @@ class RecipeController extends AbstractController
         // Création du commentaire vide
         $comment = new Comments;
 
+        if($this->getUser()) {
+            $comment->setFullName($this->getUser()->getFullName())
+            ->setEmail($this->getUser()->getEmail());
+        }
+
         //On génère le formulaire
         $commentForm = $this->createForm(CommentsType::class, $comment);
 
@@ -180,7 +187,32 @@ class RecipeController extends AbstractController
         $commentForm->handleRequest($request);
 
         //traitement du formulaire
+        if($commentForm->isSubmitted() && $commentForm->isValid()) {
+            $comment->setCreatedAt(new \DateTimeImmutable());
+            $comment->setRecipe($recipe);
 
+            //On récupère le contenu du champ parentid 
+            $parentid = $commentForm->get("parentid")->getData();
+
+            //On va chercher le commentaire correspondant
+            if($parentid != null) {
+                $parent = $manager->getRepository(Comments::class)->find($parentid);
+            }
+
+            //On définit le parent
+            $comment->setParent($parent ?? null);
+
+            $manager->persist($comment);
+            $manager->flush();
+
+            $this->addFlash(
+                'success',
+                'Votre commentaire a bien été envoyé.'
+            );
+
+            return $this->redirectToRoute('recipe.show', ['id' => $recipe->getId()]);
+
+        }
 
         return $this->render('pages/recipe/show.html.twig', [
             'recipe' => $recipe,

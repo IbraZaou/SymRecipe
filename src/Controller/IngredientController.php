@@ -28,9 +28,10 @@ class IngredientController extends AbstractController
      */
 
 
-    #[Route('/ingredient', name: 'ingredient.index', methods: ['GET'])]
+    #[Route('/ingredient', name: 'ingredient.index', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_USER')]
-    public function index(IngredientRepository $repository, PaginatorInterface $paginator, Request $request): Response
+    public function index(IngredientRepository $repository, PaginatorInterface $paginator, Request $request,
+    EntityManagerInterface $manager): Response
     {
 
         $ingredients = $paginator->paginate(
@@ -39,31 +40,6 @@ class IngredientController extends AbstractController
             10
         );
 
-        return $this->render('pages/ingredient/index.html.twig', [
-            'ingredients' => $ingredients
-        ]);
-    }
-
-
-
-    /**
-     * This controller show a form which create an ingredient
-     * 
-     * @param Request $request
-     * @param EntityManagerInterface $manager
-     * @return Response
-     * 
-     */
-
-
-    #[Route('/ingredient/nouveau', 'ingredient.new', methods: ['GET', 'POST'])]
-    #[IsGranted('ROLE_USER')]
-    public function new(
-        
-        Request $request,
-        EntityManagerInterface $manager
-        ) : Response 
-        {
         $ingredient = new Ingredient();
         $form = $this->createForm(IngredientType::class, $ingredient);
 
@@ -84,10 +60,23 @@ class IngredientController extends AbstractController
             return $this->redirectToRoute('ingredient.index');
         }
 
-        return $this->render('pages/ingredient/new.html.twig', [
-            'form' => $form->createView()]);
+
+        return $this->render('pages/ingredient/index.html.twig', [
+            'ingredients' => $ingredients,
+            'form' => $form->createView()
+        ]);
     }
 
+
+
+    /**
+     * This controller show a form which create an ingredient
+     * 
+     * @param Request $request
+     * @param EntityManagerInterface $manager
+     * @return Response
+     * 
+     */
 
 
     /**
