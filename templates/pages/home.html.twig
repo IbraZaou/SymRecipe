@@ -33,11 +33,16 @@
 			<a class="btn btn-primary btn-lg" href="{{ path('security.registration') }}" role="button">Inscription</a>
 		</div>
 
+		{# Search Bar Start#}
 
-		{{ form_start(form) }}
-		{{ form_widget(form.q, {'attr': {'class': 'form-control', 'placeholder': 'Rechercher votre recette'}}) }}
-		<button type="submit" class="btn btn-primary">Search</button>
-		{{ form_end(form) }}
+		{% if app.user %}
+			{{ form_start(form) }}
+			{{ form_widget(form.q, {'attr': {'class': 'form-control', 'placeholder': 'Rechercher votre recette'}}) }}
+			<button type="submit" class="btn btn-primary">Search</button>
+			{{ form_end(form) }}
+		{% endif %}
+
+		{# Search Bar End #}
 
 		<div class="recipes">
 			<h2>Recette de la communauté

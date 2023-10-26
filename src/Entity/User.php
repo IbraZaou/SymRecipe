@@ -2,21 +2,40 @@
 
 namespace App\Entity;
 
+use App\Entity\Mark;
+use App\Entity\Recipe;
+use App\Entity\Ingredient;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Patch;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-use ApiPlatform\Metadata\ApiResource;
 
 #[UniqueEntity('email')]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\EntityListeners(['App\EntityListener\UserListener'])]
-#[ApiResource]
+#[ApiResource(
+    operations: [
+        new Get(
+            normalizationContext: [
+                'groups' => ['get', 'User:item:get'],
+            ],
+            security: "is_granted('ROLE_ADMIN') or object == user"
+        ),
+        new Patch(security: "is_granted('ROLE_ADMIN') or object == user"),
+        new GetCollection(security: "is_granted('ROLE_ADMIN')"),
+    ],
+    normalizationContext: ['groups' => ['get']],
+)]
 
 class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFactorInterface
 {
@@ -29,6 +48,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
     #[ORM\Column(length: 50)]
     #[Assert\NotBlank()]
     #[Assert\Length(min: 2, max: 50,)]
+
     private ?string $fullName = null;
 
     #[ORM\Column(length: 50, nullable: true)]

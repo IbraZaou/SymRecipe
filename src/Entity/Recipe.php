@@ -2,16 +2,24 @@
 
 namespace App\Entity;
 
+use App\Entity\Mark;
 use App\Entity\Category;
+use App\Entity\Comments;
 use App\Entity\Ustensil;
 use App\Entity\Ingredient;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Post;
 use Doctrine\DBAL\Types\Types;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Delete;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\RecipeRepository;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\HttpFoundation\File\File;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -21,20 +29,34 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: RecipeRepository::class)]
 #[Vich\Uploadable]
-#[ApiResource]
+#[ApiResource(
+    operations: [
+        new Get(normalizationContext: [
+            'groups' => ['get', 'Recipe:item:get'],
+        ]),
+        new Patch(security: "is_granted('ROLE_ADMIN') or object.getUser() == user"),
+        new Delete(security: "is_granted('ROLE_ADMIN') or object.getUser() == user"),
+        new GetCollection(),
+        new Post(security: "is_granted('ROLE_USER')"),
+    ],
+    normalizationContext: ['groups' => ['get']]
+)]
 class Recipe
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['get'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
     #[Assert\NotBlank()]
     #[Assert\Length(min: 2, max: 50,)]
+    #[Groups(['get'])]
     private ?string $name = null;
 
     #[Vich\UploadableField(mapping: 'recipe_images', fileNameProperty: 'imageName')]
+    #[Groups(['get'])]
     private ?File $imageFile = null;
 
     #[ORM\Column(nullable: true)]
@@ -43,25 +65,30 @@ class Recipe
     #[ORM\Column(nullable: true)]
     #[Assert\Positive()]
     #[Assert\LessThan(1441)]
+    #[Groups(['get'])]
     private ?int $time = null;
 
     #[ORM\Column(nullable: true)]
     #[Assert\Positive()]
     #[Assert\LessThan(51)]
+    #[Groups(['get'])]
     private ?int $nbPeople = null;
 
     #[ORM\Column(nullable: true)]
     #[Assert\Positive()]
     #[Assert\LessThan(6)]
+    #[Groups(['get'])]
     private ?int $difficulty = null;
 
     #[ORM\Column(type: Types::TEXT)]
     #[Assert\NotBlank()]
+    #[Groups(['get'])]
     private ?string $description = null;
 
     #[ORM\Column(nullable: true)]
     #[Assert\Positive()]
     #[Assert\LessThan(1001)]
+    #[Groups(['get'])]
     private ?float $price = null;
 
     #[ORM\Column]
@@ -72,6 +99,7 @@ class Recipe
 
     #[ORM\Column]
     #[Assert\NotNull()]
+    #[Groups(['get'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column]
@@ -80,25 +108,31 @@ class Recipe
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\ManyToMany(targetEntity: Ingredient::class)]
+    
     private Collection $ingredients;
 
     #[ORM\ManyToOne(inversedBy: 'recipes')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['get'])]
     private ?User $user = null;
 
     #[ORM\OneToMany(mappedBy: 'recipe', targetEntity: Mark::class, orphanRemoval: true)]
+    #[Groups(['get'])]
     private Collection $marks;
 
     #[ORM\ManyToOne(inversedBy: 'recipes')]
+    #[Groups(['get'])]
     private Category $category;
 
     #[ORM\ManyToMany(targetEntity: Ustensil::class)]
     #[ORM\JoinTable(name: 'recipe_ustensil')]
+    #[Groups(['get'])]
     private Collection $ustensils;
 
     private ?float $average = null;
 
     #[ORM\OneToMany(mappedBy: 'recipe', targetEntity: Comments::class, orphanRemoval: true)]
+    #[Groups(['get'])]
     private Collection $comments;
 
 
